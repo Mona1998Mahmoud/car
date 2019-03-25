@@ -1,0 +1,318 @@
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+
+def myInit():
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(60,1,1,30)
+    gluLookAt(8,9,10,
+              0,0,0,
+              0,1,0)
+    glClearColor(1,1,1,1)
+    glClear(GL_COLOR_BUFFER_BIT)
+    
+angle=0
+x=0
+forward= True
+car_z = 0
+angle_y=0
+
+def respond(key , x ,y):
+    global car_z
+    global angle_y
+    if key == GLUT_KEY_LEFT:
+        car_z -= .2
+        angle_y = 90
+        #angle = 0
+
+    elif key == GLUT_KEY_RIGHT:
+        car_z += .2
+        angle_y = 90
+        #angle = 0
+
+        draw()
+
+
+def clouds(r,x):
+    glLoadIdentity()
+    glColor3f(1,1,1)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(-6+x,5,-12.5)
+    glutSolidSphere(r,10,10)
+
+def cuby(x):
+    
+    glLoadIdentity()
+    
+    glColor3f(1,1,1)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x,0,0)
+    glScale(2,0.01,.5)
+    
+    glutSolidCube(1)
+
+
+def cubyW(x):
+    
+    glLoadIdentity()
+    glColor3f(1,1,1)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x,0,5-.75)
+    glScale(1,.45,.75/1.5)
+    glutSolidCube(1.5)
+
+    
+    glLoadIdentity()
+    glColor3f(1,1,1)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x,0,-5)
+    glScale(1,.45,.75/1.5)
+    glutSolidCube(1.5)
+
+
+def cubyB(x):
+    
+    glLoadIdentity()
+    glColor3f(0,0,0)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x,0,5-.75)
+    glScale(1.05,.455,.755/1.5)
+    glutSolidCube(1.5)
+
+    glLoadIdentity()
+    glColor3f(0,0,0)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x,0,-5)
+    glScale(1.05,.455,.755/1.5)
+    glutSolidCube(1.5)
+
+
+def trees(m,n,x,y,z,r):
+    glLoadIdentity()
+    glColor3f(0.2,0,0.1)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+m,0,-12+n)
+    glScale(.5*x,4*y,.3*z)
+    glutSolidCube(1)
+
+    
+    glLoadIdentity()
+    glColor3f(0.1,0.6,0.1)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+m-.5,0+3*y,-12.5+n)
+    glutWireSphere(1.5*r,32,28)
+
+
+    
+def draw():
+    global car_z
+    global angle
+    global x
+    global forward
+    global angle_y
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    glClear(GL_COLOR_BUFFER_BIT)
+
+
+#sky
+    glLoadIdentity()
+    glColor3f(0,.7,.9)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(-20,0,-20)
+    glScale(2000,.02,20000000)
+    glutSolidCube(50)
+
+    
+    glLoadIdentity()
+    glColor3f(0,.7,.9)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(-20,0,-20)
+    glScale(20000000,.02,200000)
+    glutSolidCube(50)
+
+
+#ground
+    glLoadIdentity()
+    glColor3f(.1,1,.1)
+    glRotate(0+angle_y,0,1,0)
+    glScale(2000,0.01,2)
+    glutSolidCube(50)
+
+
+#road
+    glLoadIdentity()
+    glColor3f(.6,0.6,0.6)
+    glRotate(0+angle_y,0,1,0)
+    glScale(1000000,0.01,.2)
+    glutSolidCube(50)
+
+
+#clouds
+    clouds(.5,.5)
+    clouds(.9,-.5)
+    clouds(.65,-1.3)
+
+    clouds(.7,4.8)
+    clouds(.3,4)
+    clouds(.45,5.7)
+
+    clouds(.9,-10.4)
+    clouds(.7,-11.9)
+    clouds(.5,-9.4)
+
+
+    clouds(.5,.5+12)
+    clouds(.9,-.5+12)
+    clouds(.65,-1.3+12)
+
+    clouds(.5,.5+20)
+    clouds(.9,-.5+20)
+    clouds(.65,-1.3+20)
+
+    
+#trees
+    trees(3.5,0,1.1,1.1,1.1,1.1)
+    trees(0,0,1,1,1,1)   #def trees(m,n,x,y,z,r):
+    trees(-3.5,0,.9,.9,.9,.9)
+    trees(-7,0,.8,.8,.8,.8)
+    trees(-10.5,0,.7,.7,.7,.7)
+    trees(-12.5,1,.6,.6,.6,.6)
+    
+    trees(-15,2,.5,.5,.5,.5)
+    trees(-17.5,3,.4,.4,.4,.4)
+    trees(-24,2,.3,.3,.3,.3)
+
+    trees(-3,20,.7,.7,.7,.7)
+    trees(0,20,.8,.8,.8,.8)
+    trees(3,20,.9,.9,.9,.9)
+
+
+#road rect_s
+    for i in range(-18,60,3):
+        cuby(i)
+
+#road side cubes
+    for i in range(-60,60,3):
+        cubyB(i)
+        cubyW(i+1.5)
+        
+
+#hidden side wheels
+    glLoadIdentity()
+    glColor3f(0,0,0)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x-5*0.5, -0.25*0.5*5 ,-5*0.5*0.5+car_z)
+    glRotate(angle,0,0,1)
+    glutSolidTorus(0.125,0.5,12,10)
+
+    glColor3f(0,0,0)
+    glLoadIdentity()
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+5*0.5, -0.25*0.5*5 ,-5*0.5*0.5+car_z)
+    glRotate(angle,0,0,1)
+    glutSolidTorus(0.125,0.5,12,10)
+
+#car body
+    #base cube
+    glLoadIdentity()
+    glColor3f(.1,0,0)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x,0,car_z)
+    glScale(1,0.25,0.5)
+    glutSolidCube(5)
+
+    #upper cube
+    glLoadIdentity()
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+0,5*0.25,car_z)
+    glRotate(0,0+angle_y,0,1)
+    glScale(0.5,0.25,0.5)    
+    glutSolidCube(5)
+
+    #front glass
+    glLoadIdentity()
+    glColor(0.8,0.8,0.8,.3)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+0+2.49/2,5*0.25,car_z)
+    glScale(.001,0.248,0.48)
+    glutSolidCube(5)
+
+
+    #windows
+    glLoadIdentity()
+    glColor(0.8,0.8,0.8,.3)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+0-2.49/4,5*0.25,car_z+2.49/2)
+    glScale(.48/2,0.248,0.0002)
+    glutSolidCube(4.9)
+
+
+    glLoadIdentity()
+    glColor(0.8,0.8,0.8,.3)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+0+2.49/4,5*0.25,car_z+2.49/2)
+    glScale(.48/2,0.248,0.0002)
+    glutSolidCube(4.9)
+
+
+    
+#wheels
+    glColor3f(0,0,0)
+    glLoadIdentity()
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x+5*0.5, -0.25*0.5*5 , 5*0.5*0.5+car_z)
+    glRotate(angle,0,0,1)
+    glutSolidTorus(0.125,0.5,12,10)
+
+
+    glLoadIdentity()
+    glColor3f(0,0,0)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate(x-5*0.5, -0.25*0.5*5 ,5*0.5*0.5+car_z)
+    glRotate(angle,0,0,1)
+    glutSolidTorus(0.125,0.5,12,10)
+    glLoadIdentity()
+    glColor3f(0.9,0.8,0.3)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate((x-5*0.5)+5, (-0.25*0.5*5)+1 ,(5*0.5*0.5+car_z)-.4)
+    glutWireSphere(0.15,12,10)
+
+
+    #car lamps
+    glLoadIdentity()
+    glColor3f(0.9,0.8,0.3)
+    glRotate(0+angle_y,0,1,0)
+    glTranslate((x-5*0.5)+5, (-0.25*0.5*5)+1 ,(5*0.5*0.5+car_z)-2.1)
+    glutWireSphere(0.15,12,10)
+
+
+    glutSwapBuffers()
+
+
+    
+
+    if forward:
+        angle -= .9
+        x += 0.01
+        if x>5:
+            forward = False
+    else:
+        angle += .9
+        x -= 0.01
+        if x< -5:
+            forward = True
+        
+    
+
+glutInit()
+glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
+glutInitWindowSize(600, 600)
+glutCreateWindow(b"MOVING CAR")
+myInit()
+glutDisplayFunc(draw)
+glutIdleFunc(draw)
+glutSpecialFunc(respond)
+glutMainLoop()
+
